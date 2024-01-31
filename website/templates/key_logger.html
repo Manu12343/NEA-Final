@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Key Logger{% endblock %}
+{% block content %}
+<h3 align="center">Key Logger</h3>
+<br />
+<form action="/start_keylogger" method="post">
+    <button type="submit" class="btn btn-primary">Start Keylogger</button>
+</form>
+
+<form action="/clear_file" method="post">
+    <button type="submit" class="btn btn-danger">Clear File</button>
+</form>
+
+<form action="/find_social_media_platforms" method="post">
+    <button type="submit" class="btn btn-success">Find Social Media Platforms</button>
+</form>
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Web Cam{% endblock %}
+{% block content %}
+    <!-- Webcam header -->
+    <h3 align="center">Webcam</h3>
+    
+    <!-- Form to start/stop webcam -->
+    <form id="start-stop-form" method="POST" action="{{ url_for('views.webcam') }}">
+        <button type="submit" class="btn btn-primary" name="toggle_webcam" id="toggle-webcam-btn">Start Webcam</button>
+    </form>
+    
+    <!-- Capture button -->
+    <form method="POST" action="{{ url_for('views.webcam') }}">
+        <button type="submit" class="btn btn-primary" name="click">Capture</button>
+    </form>
+    
+    <!-- Recording button -->
+    <form method="POST" action="{{ url_for('views.webcam') }}">
+        <button type="submit" class="btn btn-primary" name="rec">Start/Stop Recording</button>
+    </form>
+    
+    <!-- Webcam feed -->
+    <video id="webcam-feed" autoplay height="80%" style="display: none;"></video>
+    
+    <!-- Instructions -->
+    <h3 style="font-family:courier;">Instructions:</h3>
+    <ol style="font-family:courier;">
+        <li>Stop/Start--Toggle between stop or start live streaming</li>
+        <li>Capture--Take still-shot and save in the 'shots' directory</li>
+        <li>Start/Stop Recording--Toggle between starting and stopping video recording</li>
+    </ol>
+    
+    <form action="{{ url_for('views.select_screenshot_folder') }}" method="post" enctype="multipart/form-data">
+        <label for="screenshot_dir">Select Screenshot Folder:</label>
+        <!-- Add webkitdirectory attribute to enable folder selection -->
+        <input type="file" id="screenshot_dir" name="screenshot_dir" webkitdirectory directory multiple />
+        <button type="submit">Select Folder</button>
+    </form>
+    
+
+    <!-- JavaScript for webcam functionality -->
+    <script>
+        var video = document.getElementById('webcam-feed');
+        var toggleWebcamBtn = document.getElementById('toggle-webcam-btn');
+        var startStopForm = document.getElementById('start-stop-form');
+        var webcamStarted = false;
+
+        // Function to start or stop webcam
+        function toggleWebcam() {
+            if (webcamStarted) {
+                // Stop the webcam
+                video.style.display = 'none'; // Hide the video element
+                video.srcObject.getTracks().forEach(track => track.stop());
+                toggleWebcamBtn.textContent = 'Start Webcam';
+            } else {
+                // Start the webcam
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(function (mediaStream) {
+                        video.srcObject = mediaStream;
+                        video.style.display = 'block'; // Show the video element
+                        video.onloadedmetadata = function (e) {
+                            video.play();
+                        };
+                    })
+                    .catch(function (err) {
+                        console.error('Error accessing webcam:', err);
+                    });
+                toggleWebcamBtn.textContent = 'Stop Webcam';
+            }
+            webcamStarted = !webcamStarted;
+        }
+
+        // Event listener for Start/Stop button click
+        startStopForm.addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent form submission
+            toggleWebcam();
+        });
+    </script>
+{% endblock %}

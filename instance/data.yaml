@@ -1,0 +1,13 @@
+names:
+- attentive
+- unattentive
+nc: 2
+roboflow:
+  license: CC BY 4.0
+  project: nea-sbqkg
+  url: https://universe.roboflow.com/manu-xtrmt/nea-sbqkg/dataset/1
+  version: 1
+  workspace: manu-xtrmt
+test: ../test/images
+train: NEA-1/train/images
+val: NEA-1/valid/images
